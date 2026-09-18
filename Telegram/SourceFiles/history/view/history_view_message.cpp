@@ -3880,7 +3880,7 @@ bool Message::hasFromPhoto() const {
 		if (item->isGuestChatBotMessage()) {
 			return true;
 		}
-		return !item->out() && !item->history()->peer->isUser();
+		return !hasOutLayout() && !item->history()->peer->isUser();
 	} break;
 	case Context::ContactPreview:
 	case Context::ShortcutMessages:
@@ -5854,7 +5854,8 @@ bool Message::hasOutLayout() const {
 	if (item->isGuestChatBotMessage()) {
 		return false;
 	}
-	return item->out() && !item->isPost();
+	const auto isCurrentUser = (item->from()->id == item->history()->session().userPeerId());
+	return (item->out() || isCurrentUser) && !item->isPost();
 }
 
 bool Message::drawBubble() const {
